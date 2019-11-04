@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"muiappcf3695b2": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}
