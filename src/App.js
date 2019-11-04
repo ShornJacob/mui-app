@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
+import useForm from "react-hook-form"
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -32,6 +33,11 @@ const useStyles = makeStyles(theme => ({
 function App() {
   const classes = useStyles();
 
+    //register method from react-hook-from
+    const {register, handleSubmit, errors, watch} = useForm()
+
+  const onSubmit = values => console.log(values)
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -42,7 +48,7 @@ function App() {
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -53,7 +59,17 @@ function App() {
             name="email"
             autoComplete="email"
             autoFocus
+            error={!!errors.email}
+            // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+            inputRef={register ({
+              pattern : {
+                value : /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              }
+            })}
+            helperText={errors.email && "Email not valid."}
           />
+          
+
 
           <TextField
             variant="outlined"
@@ -64,6 +80,14 @@ function App() {
             label="Password"
             type="password"
             id="password"
+            error={!!errors.password}
+            // {...pass}
+            inputRef={register ({
+              minLength : {
+                value : 8
+              }
+            })}
+            helperText={errors.password && "Minimum Length of 8."}
           />
 
           <TextField
@@ -75,6 +99,12 @@ function App() {
             label="Confirm Password"
             type="password"
             id="password2"
+            error={!!errors.password2}
+            // {...pass2}
+            inputRef={register({
+              validate: (value) => value === watch('password')
+            })}
+            helperText={errors.password2 && "Passwords don't match."}
           />
 
           <Button
@@ -167,3 +197,16 @@ export default App;
 //The flex-grow CSS property sets the flex grow factor of a flex item main size. It specifies how much of the remaining space in the flex container should be assigned to the item (the flex grow factor).
 //https://www.w3schools.com/cssref/pr_dim_max-width.asp
 //%	Defines the maximum width in percent of the containing block
+
+//Text Field error	bool		If true, the label will be displayed in an error state.
+
+
+//https://medium.com/javascript-in-plain-english/react-refs-both-class-and-functional-components-76b7bce487b8
+//using refs in material ui
+//react hook form uses refs
+//name is unique identofier for react hook form
+//https://react-hook-form.com/api#register
+
+//https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+
+//https://react-hook-form.com/api/#validationSchema
