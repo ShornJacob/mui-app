@@ -1,0 +1,19 @@
+{
+    "muiauth": {
+        "awscloudformation": {
+            "AuthRoleName": "mui-app-muiauth-20191104150046-authRole",
+            "UnauthRoleArn": "arn:aws:iam::689919232880:role/mui-app-muiauth-20191104150046-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::689919232880:role/mui-app-muiauth-20191104150046-authRole",
+            "Region": "ap-southeast-2",
+            "DeploymentBucketName": "mui-app-muiauth-20191104150046-deployment",
+            "UnauthRoleName": "mui-app-muiauth-20191104150046-unauthRole",
+            "StackName": "mui-app-muiauth-20191104150046",
+            "StackId": "arn:aws:cloudformation:ap-southeast-2:689919232880:stack/mui-app-muiauth-20191104150046/eab334b0-fea6-11e9-8e26-0ab1b9b87aaa"
+        },
+        "categories": {
+            "auth": {
+                "muiappcf3695b2": {}
+            }
+        }
+    }
+}
