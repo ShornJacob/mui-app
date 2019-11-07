@@ -11,12 +11,16 @@ export default ({ email }) => {
 //   console.log(email);
   const classes = useStyles();
 
+  //state ise set to message that needs to be displayed always
   const [awsError, setawsError] = useState(
     "An Authorisation has been sent to the email. Please confirm the code."
   );
+  
+
+  const { register, handleSubmit, errors } = useForm();
 
   //values has to be first, its not explicit
-  //not pass email, its accesible inside the function
+  //not pass email, its accesible inside the functionnpm start
   const onConfirm = async (values) => {
     // console.log(email)
     // console.log(values.authCode)
@@ -26,13 +30,13 @@ export default ({ email }) => {
       console.log("Confirmation success");
       navigate("/user");
     } else {
-    //   console.log(confirmStatus);
+    //   
       setawsError(confirmStatus);
+      console.log(confirmStatus);
     }
   };
 
-  const { register, handleSubmit, errors } = useForm();
-
+ 
   return (
     <React.Fragment>
       <form className={classes.form} onSubmit={handleSubmit(onConfirm)}>

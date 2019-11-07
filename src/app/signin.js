@@ -1,47 +1,48 @@
 import React, { useState } from "react";
-import { signUp } from "./amplify";
 import useForm from "react-hook-form";
-import TextField from "@material-ui/core/TextField";
+import { signIn } from "./amplify";
+import {setUser} from './utils'
+import { Redirect } from "@reach/router";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
+import TextField from "@material-ui/core/TextField";
 import Layout from "./layout";
 import {useStyles} from './styles'
-import ConfirmSignUp from './confirmsignup'
+import { isLoggedIn } from "./utils"
+
+
 import SnackBarMEssage from './snackbar'
-import {isLoggedIn} from './utils'
-import { navigate } from "@reach/router";
 
 export default () => {
-  const classes = useStyles();
-  const [stage, setStage] = useState(0);
-  const [email, setEmail] = useState("");
-  const [awsError, setawsError] = useState("");
-  const { register, handleSubmit, errors, watch } = useForm();
+  
+  const classes = useStyles()
+  const [awsError, setawsError] = useState(null)
+  const { register, handleSubmit, errors } = useForm()
 
-
-  const  onSignUp = async (values) => {   
-    const signUpStatus = await signUp(values.email, values.password)
-   //if success, move to next stage
-   //if not we have an error object. stage still 0
-    if (signUpStatus === true) { 
-      setStage(1)
-      setEmail(watch("email")) 
+  const  onSignIn = async (values) => {   
+    const userInfo = await signIn(values.email, values.password)
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in
+    if ('username' in userInfo) { 
+      setUser(userInfo)
+      return <Redirect  to='/app/profile' noThrow/>
     } else {
-      setawsError(signUpStatus.message) 
+      setawsError(userInfo.message) 
+      console.log(awsError)
     }
      
   }
 
   if (isLoggedIn()) {
-    navigate(`/app/profile`)
+
+    return <Redirect to='/app/profile' noThrow/>
   }
+
   return (
+   
     <React.Fragment>
-    <Layout heading="Sign Up">
-      {/* stage 0 signup */}
-      { stage === 0 &&
-        <form className={classes.form} onSubmit={handleSubmit(onSignUp)}>
+      <Layout heading="Sign In">
+        <form className={classes.form} onSubmit={handleSubmit(onSignIn)}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -80,36 +81,21 @@ export default () => {
             helperText={errors.password && "Minimum Length of 8."}
           />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password2"
-            label="Confirm Password"
-            type="password"
-            id="password2"
-            error={!!errors.password2}
-            inputRef={register({
-              validate: value => value === watch("password")
-            })}
-            helperText={errors.password2 && "Passwords don't match."}
-          />
+       
 
           <Button
             type="submit"
-            //this   sets    full     width    to     true  
             fullWidth
             variant="outlined"
             className={classes.submit}
           >
-            Sign Up
+            Sign In
           </Button>
 
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Sign In
+                Sign Up
               </Link>
             </Grid>
             <Grid item>
@@ -119,19 +105,12 @@ export default () => {
             </Grid>
           </Grid>
         </form>
-      }
+      </Layout>
 
-      {/* stage 1 is for authorization code */}
-     { stage === 1 &&
-        <ConfirmSignUp email={email}/>
-      }
-    </Layout>
-
-    {/* not using watch to pass a prop. explicitely setting in prop */}
-    {
-     awsError !== "" && <SnackBarMEssage message={awsError} />
-    }
-
+      {/* not using watch to pass a prop. explicitely setting in prop */}
+      {awsError !== null && <SnackBarMEssage message={awsError} />}
     </React.Fragment>
   );
 };
+
+//https://github.com/dabit3/gatsby-auth-starter-aws-amplify/blob/master/src/components/Login.js
