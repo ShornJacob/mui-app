@@ -8,7 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { navigate} from "@reach/router";
 import {getUser, logout} from '../app/utils'
+
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,7 +42,10 @@ export default () => {
           {/* https://reactjs.org/docs/events.html#mouse-events */}
           {/* https://stackoverflow.com/questions/40167287/react-material-ui-how-do-i-know-i-can-use-onclick-for-button */}
           {/* Material-UI documentation does not list the standard React (native browser) events */}
-          <Button color="inherit" onClick={() => logout()}>Login</Button>
+
+          {/* Redirect component does not work as a callback */}
+          {/* seems callback has to be a function */}
+          <Button color="inherit" onClick={() => logout(() => navigate(`/app/signin`))}>Logout</Button>
         </Toolbar>
       </AppBar>
     </div>
